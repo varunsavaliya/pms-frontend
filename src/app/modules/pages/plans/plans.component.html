@@ -1,5 +1,5 @@
 <div class="container">
-    <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="form">
+    <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="form" #f="ngForm">
         <div>
             <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
@@ -16,10 +16,10 @@
             <mat-form-field appearance="fill">
                 <mat-label>Duration</mat-label>
                 <mat-select formControlName="duration" placeholder="Select duration">
-                    <mat-option value="1_month">1 Month</mat-option>
-                    <mat-option value="3_months">3 Months</mat-option>
-                    <mat-option value="6_months">6 Months</mat-option>
-                    <mat-option value="1_year">1 Year</mat-option>
+                    <mat-option value="1 Month">1 Month</mat-option>
+                    <mat-option value="3 Months">3 Months</mat-option>
+                    <mat-option value="6 Months">6 Months</mat-option>
+                    <mat-option value="1 Year">1 Year</mat-option>
                 </mat-select>
                 <mat-error *ngIf="planForm.get('duration').invalid">Duration is required</mat-error>
             </mat-form-field>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +19,7 @@ import { IPlan } from '../../models/interfaces/plans/plan.interface';
   styleUrl: './plans.component.scss'
 })
 export class PlansComponent {
+  @ViewChild('f') form;
   planForm: FormGroup;
   plans: IPlan[] = [];
   displayedColumns: string[] = ['name', 'price', 'duration'];
@@ -34,6 +35,7 @@ export class PlansComponent {
     if (this.planForm.valid) {
       this.plansRepository.createPlan(this.planForm.value).subscribe({
         next: (res) => {
+          this.form.resetForm();
           console.log(res);
           this.#getAllPlans()
         },

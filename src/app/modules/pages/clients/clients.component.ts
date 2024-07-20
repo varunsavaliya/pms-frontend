@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IClient } from '../../models/interfaces/clients/clients.interface';
 import { ClientsRepository } from '../../repositories/clients/clients.repository';
@@ -22,6 +22,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   styleUrl: './clients.component.scss'
 })
 export class ClientsComponent {
+  @ViewChild('f') form;
   submissionForm: FormGroup;
   clients: IClient[] = [];
   plans: IPlan[] = [];
@@ -38,8 +39,14 @@ export class ClientsComponent {
 
   onSubmit() {
     if (this.submissionForm.valid) {
-      this.clientsRepository.createSubmission(this.submissionForm.value).subscribe({
+      const model = {
+        name: this.submissionForm.controls['name'].value ?? '',
+        planId: this.submissionForm.controls['plan'].value,
+        startDate: this.submissionForm.controls['startDate'].value
+      }
+      this.clientsRepository.createSubmission(model).subscribe({
         next: (res) => {
+          this.form.resetForm();
           console.log(res);
           this.#getAllSubmission()
         },
@@ -55,13 +62,13 @@ export class ClientsComponent {
   calculateEndDate(startDate: Date, duration: string): Date {
     const date = new Date(startDate);
     switch (duration) {
-      case '1_month':
+      case '1 Month':
         date.setMonth(date.getMonth() + 1);
         break;
-      case '3_months':
+      case '3 Months':
         date.setMonth(date.getMonth() + 3);
         break;
-      case '6_months':
+      case '6 Months':
         date.setMonth(date.getMonth() + 6);
         break;
       case '1_year':
@@ -76,6 +83,7 @@ export class ClientsComponent {
   #addListener() {
     this.submissionForm.controls['plan'].valueChanges.subscribe(
       (value) => {
+        this.#changeEndDate();
         if (!this.submissionForm.controls['plan'].value) return undefined;
         const plan = this.plans.find(p => p.id === +this.submissionForm.controls['plan'].value)
         if (!plan) return undefined;
@@ -84,12 +92,16 @@ export class ClientsComponent {
     )
     this.submissionForm.controls['startDate'].valueChanges.subscribe(
       (value) => {
-        if (!this.submissionForm.controls['startDate'].value || !this.submissionForm.controls['plan'].value) return undefined;
-        const plan = this.plans.find(p => p.id === +this.submissionForm.controls['plan'].value)
-        if (!plan) return undefined;
-        this.submissionForm.controls['endDate'].setValue(this.calculateEndDate(this.submissionForm.controls['startDate'].value, plan.duration))
+       this.#changeEndDate();
       }
     )
+  }
+
+  #changeEndDate (){
+    if (!this.submissionForm.controls['startDate'].value || !this.submissionForm.controls['plan'].value) return undefined;
+    const plan = this.plans.find(p => p.id === +this.submissionForm.controls['plan'].value)
+    if (!plan) return undefined;
+    this.submissionForm.controls['endDate'].setValue(this.calculateEndDate(this.submissionForm.controls['startDate'].value, plan.duration))
   }
 
   #getAllPlans() {

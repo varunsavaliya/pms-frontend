@@ -1,5 +1,5 @@
 <div class="container">
-    <form [formGroup]="submissionForm" (ngSubmit)="onSubmit()" class="form">
+          <form [formGroup]="submissionForm" (ngSubmit)="onSubmit()" class="form" #f="ngForm">
         <div>
             <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>

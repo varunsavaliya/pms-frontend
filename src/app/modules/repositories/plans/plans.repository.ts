@@ -19,6 +19,6 @@ export class PlansRepository {
     }
 
     createPlan(model: any): Observable<any> {
-        return this.baseService.post(this.#url, {});
+        return this.baseService.post(this.#url, model);
     }
 }
