@@ -1,0 +1,51 @@
+<div class="container">
+    <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="form">
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" placeholder="Enter plan name">
+                <mat-error *ngIf="planForm.get('name').invalid">Name is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Price</mat-label>
+                <input matInput formControlName="price" type="number" placeholder="Enter price">
+                <mat-error *ngIf="planForm.get('price').invalid">Price is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Duration</mat-label>
+                <mat-select formControlName="duration" placeholder="Select duration">
+                    <mat-option value="1_month">1 Month</mat-option>
+                    <mat-option value="3_months">3 Months</mat-option>
+                    <mat-option value="6_months">6 Months</mat-option>
+                    <mat-option value="1_year">1 Year</mat-option>
+                </mat-select>
+                <mat-error *ngIf="planForm.get('duration').invalid">Duration is required</mat-error>
+            </mat-form-field>
+        </div>
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+    </form>
+
+    <button mat-raised-button color="primary" routerLink="/clients">Go to clients</button>
+
+    <mat-table [dataSource]="plans" class="mat-elevation-z8 table">
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+            <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.price}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="duration">
+            <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.duration}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>

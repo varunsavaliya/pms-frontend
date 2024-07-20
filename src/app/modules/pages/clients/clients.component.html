@@ -1,0 +1,78 @@
+<div class="container">
+    <form [formGroup]="submissionForm" (ngSubmit)="onSubmit()" class="form">
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" placeholder="Enter plan name">
+                <mat-error *ngIf="submissionForm.get('name').invalid">Name is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="startDate" placeholder="Select start date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="submissionForm.get('startDate').invalid">Start date is required</mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+
+            <mat-form-field appearance="fill">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="endDatepicker" formControlName="endDate">
+                <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatepicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Plan</mat-label>
+                <mat-select formControlName="plan" placeholder="Select plan">
+                    <mat-option value="">Select Plan</mat-option>
+                    <ng-container *ngFor="let item of plans">
+                        <mat-option [value]="item.id">{{item.name}}</mat-option>
+                    </ng-container>
+                </mat-select>
+                <mat-error *ngIf="submissionForm.get('plan').invalid">Plan is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Price</mat-label>
+                <input matInput formControlName="price" placeholder="Price">
+            </mat-form-field>
+        </div>
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+    </form>
+
+    <button mat-raised-button color="primary" routerLink="/plans">Go to plans</button>
+
+    <mat-table [dataSource]="clients" class="mat-elevation-z8 table">
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="planName">
+            <mat-header-cell *matHeaderCellDef> Plan Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.plan?.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+            <mat-header-cell *matHeaderCellDef> Start Date </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.startDate | date}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="duration">
+            <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.plan?.duration}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="endDate">
+            <mat-header-cell *matHeaderCellDef> End Date </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{calculateEndDate(element.startDate, element?.plan?.duration) | date}}
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>
